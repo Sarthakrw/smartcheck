@@ -1,9 +1,0 @@
-path: /Users/sarthakr/Desktop/Projects/smartcheck/data
-train: images/train
-val: images/train
-
-#classes
-names:
-  0: diagram
-  1: table
-  2: letter
