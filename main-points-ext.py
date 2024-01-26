@@ -1,21 +1,13 @@
 import streamlit as st
 import google.generativeai as genai
 from PIL import Image
-from pdf2image import convert_from_path
-import pytesseract  # For handwritten text extraction
+from pdf2image import convert_from_bytes  # Use convert_from_bytes instead
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
 os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-
-
-# Function to extract text from an image (including handwritten)
-def extract_text_from_image(image_file):
-    text = pytesseract.image_to_string(Image.open(image_file))
-    return text
-
 
 model = genai.GenerativeModel("gemini-pro-vision")
 
@@ -27,15 +19,14 @@ def generate_key_points(image_file):
 
     return response.text
 
-
 # Streamlit app layout
 st.title("Key Points Extractor with Gemini")
-
 
 uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
 
 if uploaded_file is not None:
-    pages = convert_from_path(uploaded_file.name, dpi=200)  # Adjust DPI as needed
+    pdf_bytes = uploaded_file.read()
+    pages = convert_from_bytes(pdf_bytes, dpi=200)  # Use convert_from_bytes instead
 
     for page_num, page_image in enumerate(pages, start=1):
         key_points = generate_key_points(page_image)
