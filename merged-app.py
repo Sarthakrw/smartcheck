@@ -46,16 +46,15 @@ ques_separate = YOLO("model2/train-2/weights/best.pt")
 
 # Question separator :-
 def separate_questions(image):
-    original_image = image
-
     # Make predictions
-    results = ques_separate(image_path)
+    results = ques_separate(image)
+
+    processed_images = []
 
     # Check if there are no detections
     if len(results[0].boxes.data) == 0:
         # Save the entire image
-        entire_image_path = os.path.join(cut_images_folder, f"entire_{filename}")
-        cv2.imwrite(entire_image_path, original_image)
+        processed_images.append(image.copy())
 
     else:
         # Sort detections based on y-coordinate (top to bottom)
@@ -65,22 +64,23 @@ def separate_questions(image):
         for i in range(len(detections)):
             if i == 0:
                 # Save from the top of the image to the first line
-                cut_image = original_image[:int(detections[i][1]), :]
-                cut_image_path = os.path.join(cut_images_folder, f"cut_{i}_{filename}")
-                cv2.imwrite(cut_image_path, cut_image)
+                cut_image = image[:int(detections[i][1]), :]
+                processed_images.append(cut_image.copy())
             else:
                 # Save from the current line to the next line or to the bottom of the page
                 _, y_prev, _, _, _, _ = detections[i - 1]
                 _, y_curr, _, _, _, _ = detections[i]
-                cut_image = original_image[int(y_prev):int(y_curr), :]
-                cut_image_path = os.path.join(cut_images_folder, f"cut_{i}_{filename}")
-                cv2.imwrite(cut_image_path, cut_image)
+                cut_image = image[int(y_prev):int(y_curr), :]
+                processed_images.append(cut_image.copy())
 
         # If there are detections, save from the last line to the bottom of the page
         _, y_last, _, _, _, _ = detections[-1]
-        last_line_cut_image = original_image[int(y_last):, :]
-        last_line_cut_image_path = os.path.join(cut_images_folder, f"cut_last_{filename}")
-        cv2.imwrite(last_line_cut_image_path, last_line_cut_image)
+        last_line_cut_image = image[int(y_last):, :]
+        processed_images.append(last_line_cut_image.copy())
+
+    return processed_images
+
+
 
 
 
@@ -89,7 +89,9 @@ def separate_questions(image):
 def generate_key_points(image_file):
     prompt = """You are an experienced teacher, Extract key points from the text in this image, do not add extra 
     text or content other than the text that is present in the image also do not output all the extracted test 
-    as response, only mention main key points from the text in image:"""
+    as response, only mention question/answer number as in the image and main key points from the text in image:"""
+
+    # prompt = '''Extract all the text from the image'''
 
     response = gemini_vision.generate_content([prompt, image_file], stream=True)
     response.resolve()
@@ -138,18 +140,21 @@ st.write("---")
 
 if uploaded_file is not None:
     pdf_bytes = uploaded_file.read()
-    pages = convert_from_bytes(pdf_bytes, dpi=200)  # Use convert_from_bytes instead
+    pages = convert_from_bytes(pdf_bytes, dpi=300)  # Use convert_from_bytes instead
 
     # Traversing over all the pages in the PDF file
     for page_num, page_image in enumerate(pages, start=1):
         # Calling question separator function
-        imgs = []
+        processed_images = ques_separate(page_image)
+        for i in processed_images:
+            st.image(i)
+
 
         # Getting Key points for each img we got by calling "question separator"
         key_points = generate_key_points(page_image)
 
         # Calling diagram extractor function
-        diagrams = diagram_extractor()
+        diagrams = extract_diagram()
 
         # Displaying key points and diagrams
         st.write(f"**Page {page_num} Key Points:**")
