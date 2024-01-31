@@ -11,11 +11,13 @@ import numpy as np
 # question separator 
 
 def process_pdf(input_pdf, model_path):
+
+    images = input_pdf
     # Load the trained YOLOv8 model
     model = YOLO(model_path)
 
     # Convert PDF pages into images
-    images = convert_from_path(input_pdf)
+    #images = convert_from_path(input_pdf)
 
     # Initialize a list to store processed images and information
     processed_images = []
@@ -206,23 +208,22 @@ def combine_data(processed_images, extracted_diagrams, extracted_key_points):
             combined_data[question_index] = {'processed_images': [], 'extracted_diagrams': [], 'extracted_key_points': []}
         combined_data[question_index]['extracted_key_points'].append(item)
 
+    # dictionary with keys as question number
     return combined_data
 
+# processed_images = process_pdf(input_pdf=upload_file, model_path='model2/train-2/weights/best.pt')
+# # print(processed_images[0],"-------------------")
+# # save(var=processed_images, output_filename="processed_images.pkl", keys=['question_index', 'image_type', 'image'])
+
+# extracted_diagrams = extract_diagrams(processed_images, model_path="model/train/weights/best.pt")
+# # print(extracted_diagrams[0],"-------------------")
+# # save(var=extracted_diagrams, output_filename="extracted_diagrams.pkl", keys=['question_index', 'image_type', 'diagram_image'])
 
 
-processed_images = process_pdf(input_pdf='data/test/maths_short.pdf', model_path='model2/train-2/weights/best.pt')
-print(processed_images[0],"-------------------")
-save(var=processed_images, output_filename="processed_images.pkl", keys=['question_index', 'image_type', 'image'])
-
-extracted_diagrams = extract_diagrams(processed_images, model_path="model/train/weights/best.pt")
-print(extracted_diagrams[0],"-------------------")
-save(var=extracted_diagrams, output_filename="extracted_diagrams.pkl", keys=['question_index', 'image_type', 'diagram_image'])
+# extracted_key_points = process_and_extract_key_points(processed_images)
+# # print(extracted_key_points[0],"-------------------")
+# # save(var=extracted_key_points, output_filename="extracted_key_points.pkl", keys=['question_index', 'image_type', 'key_points'])
 
 
-extracted_key_points = process_and_extract_key_points(processed_images)
-print(extracted_key_points[0],"-------------------")
-save(var=extracted_key_points, output_filename="extracted_key_points.pkl", keys=['question_index', 'image_type', 'key_points'])
-
-
-combined_data = combine_data(processed_images, extracted_diagrams, extracted_key_points)
-save_combined_data(combined_data, "combined_data.pkl")
+# combined_data = combine_data(processed_images, extracted_diagrams, extracted_key_points)
+# # save_combined_data(combined_data, "combined_data.pkl")
