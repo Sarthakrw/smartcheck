@@ -18,7 +18,7 @@ def process_and_combine_data(_pages):
 
 # Function to display processed images
 def display_processed_images(processed_images, question_index):
-    st.subheader(f"Question {question_index}")
+    st.subheader(f"Question {question_index-1}")
     exp = st.expander("Show Answer Image")
     for processed_image_data in processed_images:
         if processed_image_data['question_index'] == question_index:
@@ -66,12 +66,12 @@ def main():
         # Display options to select a question
         with st.sidebar:
             st.sidebar.header("Select a question:")
-            question_index = st.sidebar.radio("Q. No.", list(combined_data.keys()))
-
+            # Start from the second question
+            question_index = st.sidebar.radio("Q. No.", list(combined_data.keys())[1:])
 
         # Create a DataFrame for the table
         table_data = pd.DataFrame({
-            "Question Number": list(combined_data.keys()),
+            "Question Number": list(range(1, len(combined_data) + 1)),
             "Marks": [random.randint(3, 15) for _ in range(len(combined_data))]
         })
 
