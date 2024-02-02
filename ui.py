@@ -28,7 +28,7 @@ def display_processed_images(processed_images, question_index):
 def display_extracted_diagrams(extracted_diagrams, question_index):
     for diagram_data in extracted_diagrams:
         if 'diagram_image' in diagram_data and diagram_data['question_index'] == question_index:
-            st.write("#### Extracted Diagrams:")
+            st.write("##### Extracted Diagrams:")
             st.image(diagram_data['diagram_image'], caption=f"{diagram_data['image_type']}")
 
 # Function to display extracted key points
@@ -38,10 +38,6 @@ def display_extracted_key_points(extracted_key_points, question_index):
         if 'key_points' in key_points_data and key_points_data['question_index'] == question_index:
             st.write(key_points_data['key_points'])
 
-# Function to display final result table
-def display_final_result_table(final_result_df):
-    st.subheader("Final Result Table:")
-    st.table(final_result_df)
 
 # Main function
 def main():
@@ -94,14 +90,14 @@ def main():
 
         st.write("---")
 
-        # Show buttons at the end of the page based on Final Result button press
+        # Show buttons at the end of the page
         if question_index is not None:
-            col1, col2, col3 = st.columns([0.2, 0.33, 0.04])
+            col1, col2, col3 = st.columns(3)
     
-            if col1.button("Marks") and question_index is not None:
+            if col1.selectbox("Marks", [0,1,2,3,4,5,6,7,8,9,10]) and question_index is not None:
                 # Your implementation for Marks button
                 pass
-            if col2.button("Report Improper Diagram Extraction") and question_index is not None:
+            if col2.selectbox("Report", ["None", "Improper Diagram Extraction", "Incorrect Key Points"]) and question_index is not None:
                 # Your implementation for Report button
                 pass
             if col3.button("Next") and question_index is not None:
