@@ -7,5 +7,5 @@ dotenv
 os
 numpy
 streamlit
-pandas as pd
+pandas
 random
