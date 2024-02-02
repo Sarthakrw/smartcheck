@@ -137,11 +137,22 @@ load_dotenv()
 os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
-model = genai.GenerativeModel("gemini-pro-vision")
+# Set up the model
+generation_config = {
+  "temperature": 0.1,
+  "top_p": 0.2,
+  "top_k": 20,
+}
+
+gemini_vision = genai.GenerativeModel("gemini-pro-vision", generation_config=generation_config)
+gemini = genai.GenerativeModel(model_name="gemini-pro", generation_config=generation_config)
 
 def generate_key_points(image):
-    prompt = "Your objective is to thoroughly comprehend handwritten student exam responses from scanned answer sheets. As you process the image from top-to-bottom, extract the core factual statements made word-for-word in each section delimited by red lines running across the page. Summarize the key points made in the text preceding each red line before moving to the next segmented section. Present these summaries clearly and concisely to optimize reviewing efficiency for the teacher while ensuring no significant logic or reasoning is missed or misinterpreted in each response snippet. Balance brevity with completeness and accuracy. The teacher depends on you, as the intermediary, to assess critical details rapidly yet reliably across all question-wise partitions. Do not introduce any factual inaccuracies or remove connectives during extraction. Strive to be an agent the teacher can trust for both grading efficiency and fairness by providing objective essence from each segmented response."
-    response = model.generate_content([prompt, image], stream=True)
+    # prompt = "Your objective is to thoroughly comprehend handwritten student exam responses from scanned answer sheets. As you process the image from top-to-bottom, extract the core factual statements made word-for-word in each section delimited by red lines running across the page. Summarize the key points made in the text preceding each red line before moving to the next segmented section. Present these summaries clearly and concisely to optimize reviewing efficiency for the teacher while ensuring no significant logic or reasoning is missed or misinterpreted in each response snippet. Balance brevity with completeness and accuracy. The teacher depends on you, as the intermediary, to assess critical details rapidly yet reliably across all question-wise partitions. Do not introduce any factual inaccuracies or remove connectives during extraction. Strive to be an agent the teacher can trust for both grading efficiency and fairness by providing objective essence from each segmented response."
+    prompt = """You are an experienced teacher, Your objective is to extract key points from the text in this image,
+    the image contains answer by a student, You have to extract important key points from these answers by the 
+    student and display these key points in an arranged manner using bullet points."""
+    response = gemini_vision.generate_content([prompt, image], stream=True)
     response.resolve()
 
     # Access text from all parts and concatenate
