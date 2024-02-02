@@ -1,0 +1,11 @@
+cv2
+ultralytics
+pdf2image
+google.generativeai
+PIL
+dotenv
+os
+numpy
+streamlit
+pandas as pd
+random
