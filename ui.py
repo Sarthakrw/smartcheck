@@ -54,7 +54,7 @@ def main():
         uploaded_file = st.sidebar.file_uploader("Upload Answersheet", type=["pdf"])
 
     st.write("---")
-
+    
     if uploaded_file is not None:
         # Convert UploadedFile to bytes
         pdf_bytes = uploaded_file.read()
