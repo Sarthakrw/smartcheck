@@ -140,7 +140,7 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 model = genai.GenerativeModel("gemini-pro-vision")
 
 def generate_key_points(image):
-    prompt = "Your objective is to thoroughly comprehend handwritten student exam responses from scanned answer sheets. As you process the image from top-to-bottom, extract the core factual statements made word-for-word in each section delimited by red lines running across the page. Summarize the key points made in the text preceding each red line before moving to the next segmented section. Present these summaries clearly and concisely to optimize reviewing efficiency for the teacher while ensuring no significant logic or reasoning is missed or misinterpreted in each response snippet. Balance brevity with completeness and accuracy. The teacher depends on you, as the intermediary, to assess critical details rapidly yet reliably across all question-wise partitions. Do not introduce any factual inaccuracies or remove connectives during extraction. Strive to be an agent the teacher can trust for both grading efficiency and fairness by providing objective essence from each segmented response."
+    prompt = "The image you have been provided is a page from the answer sheet of a student. Your job is to extract the main points that the student has written in their answer sheet word for word, such that the teacher viewing your response can grade the answer easily."
     response = model.generate_content([prompt, image], stream=True)
     response.resolve()
 
