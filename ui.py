@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
+<<<<<<< HEAD
 import random
+=======
+>>>>>>> f3dd055ed2e0a72a77508630f0eacdc0cb0b508b
 from pdf2image import convert_from_bytes
 from final_main import process_pdf, extract_diagrams, process_and_extract_key_points, combine_data
 
@@ -18,8 +21,13 @@ def process_and_combine_data(_pages):
 
 # Function to display processed images
 def display_processed_images(processed_images, question_index):
+<<<<<<< HEAD
     st.subheader(f"Question {question_index}")
     exp = st.expander("Show Answer Image")
+=======
+    st.write(f"##### Question {question_index} - Processed Images:")
+    exp = st.expander("Show answersheet")
+>>>>>>> f3dd055ed2e0a72a77508630f0eacdc0cb0b508b
     for processed_image_data in processed_images:
         if processed_image_data['question_index'] == question_index:
             exp.image(processed_image_data['image'], caption=f"{processed_image_data['image_type']}")
@@ -28,7 +36,11 @@ def display_processed_images(processed_images, question_index):
 def display_extracted_diagrams(extracted_diagrams, question_index):
     for diagram_data in extracted_diagrams:
         if 'diagram_image' in diagram_data and diagram_data['question_index'] == question_index:
+<<<<<<< HEAD
             st.write("#### Extracted Diagrams:")
+=======
+            st.write(f"##### Question {question_index} - Extracted Diagrams:")
+>>>>>>> f3dd055ed2e0a72a77508630f0eacdc0cb0b508b
             st.image(diagram_data['diagram_image'], caption=f"{diagram_data['image_type']}")
 
 # Function to display extracted key points
@@ -46,7 +58,13 @@ def display_final_result_table(final_result_df):
 # Main function
 def main():
     # Streamlit UI
+<<<<<<< HEAD
     st.title("SmartCheck :memo:")
+=======
+    st.title("SmartCheck")
+    uploaded_file = st.sidebar.file_uploader("Input Student Answersheet", type=["pdf"])
+
+>>>>>>> f3dd055ed2e0a72a77508630f0eacdc0cb0b508b
 
     # Sidebar menu
     with st.sidebar:
@@ -64,6 +82,7 @@ def main():
         combined_data = process_and_combine_data(pages)
 
         # Display options to select a question
+<<<<<<< HEAD
         with st.sidebar:
             st.sidebar.header("Select a question:")
             question_index = st.sidebar.radio("Q. No.", list(combined_data.keys()))
@@ -73,13 +92,28 @@ def main():
         table_data = pd.DataFrame({
             "Question Number": list(combined_data.keys()),
             "Marks": [random.randint(3, 15) for _ in range(len(combined_data))]
+=======
+        question_index = st.sidebar.radio("Q. No.", list(combined_data.keys()))
+
+        question_numbers = [f"Q{i}" for i in range(1, 7)]
+        marks = [10, 7, 8.5, 12, 9, 11.5]
+
+        # Create a DataFrame for the table
+        table_data = pd.DataFrame({
+            "Question Number": question_numbers,
+            "Marks": marks
+>>>>>>> f3dd055ed2e0a72a77508630f0eacdc0cb0b508b
         })
 
         # Display the table
         if st.sidebar.button("Final Result"):
+<<<<<<< HEAD
             col1, col2 = st.columns(2)
             with col1:
                 st.table(table_data)
+=======
+            st.table(table_data)
+>>>>>>> f3dd055ed2e0a72a77508630f0eacdc0cb0b508b
             question_index = None
             st.button("Submit Student Marks")
 
@@ -106,6 +140,24 @@ def main():
                 pass
             if col3.button("Next") and question_index is not None:
                 pass
+
+        st.write("---")
+
+        # Control the visibility of components based on the final result page
+        if question_index is not None:
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.text_input("Enter Marks")
+            with col2:
+                st.write("Report")
+                st.button("Report Improper Diagram Extraction")
+            with col3:
+                st.write("Next Question")
+                if st.button("Next"):
+                    question_keys = list(combined_data.keys())
+                    current_index = question_keys.index(question_index)
+                    next_index = (current_index + 1) % len(question_keys)
+                    question_index = question_keys[next_index]
 
 if __name__ == "__main__":
     main()
