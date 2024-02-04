@@ -1,4 +1,4 @@
-opencv-python
+opencv-python-headless
 ultralytics
 pdf2image
 google.generativeai
