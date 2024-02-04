@@ -38,7 +38,6 @@ def display_extracted_key_points(extracted_key_points, question_index):
         if 'key_points' in key_points_data and key_points_data['question_index'] == question_index:
             st.write(key_points_data['key_points'])
 
-
 # Main function
 def main():
     # Streamlit UI
@@ -51,6 +50,14 @@ def main():
 
     st.write("---")
     
+    # Check if a new file is uploaded
+    session_state = st.session_state
+    if getattr(session_state, 'current_file', None) != uploaded_file:
+        # File has changed, trigger cache clear
+        st.cache_data.clear()
+        # Update the current file in the session state
+        session_state.current_file = uploaded_file
+
     if uploaded_file is not None:
         # Convert UploadedFile to bytes
         pdf_bytes = uploaded_file.read()
@@ -65,7 +72,6 @@ def main():
             # Start from the first question (displaying 1 in the sidebar but using index 2 internally)
             question_index_display = st.sidebar.radio("Q. No.", list(range(1, len(combined_data))))
             question_index = question_index_display + 1  # Adjusting the internal index
-
 
         # Create a DataFrame for the table
         table_data = pd.DataFrame({
@@ -83,7 +89,6 @@ def main():
             question_index = None
             # Center-align the button
             st.markdown('<div style="text-align: center;"><button>Upload Student Marks to Database</button></div>', unsafe_allow_html=True)
-
 
         # Display processed images, extracted diagrams, and key points for the selected question
         if question_index is not None:
@@ -111,3 +116,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
