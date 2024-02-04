@@ -6,4 +6,4 @@ Pillow
 numpy
 streamlit
 pandas
-dotenv
+python-dotenv
