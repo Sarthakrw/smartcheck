@@ -83,12 +83,12 @@ def main():
         if st.sidebar.button("Final Result"):
             col1, col2 = st.columns(2)
             with col1:
-                # Center-align the entire table using markdown
-                centered_table = f'<div style="text-align: center;">{table_data.style.set_table_styles([{"selector": "table", "props": [("margin", "auto")]}]).render()}</div>'
-                st.markdown(centered_table, unsafe_allow_html=True)
+                # Center-align the entire table using Streamlit's st.table
+                st.table(table_data.style.set_table_styles([{"selector": "table", "props": [("margin", "auto")]}]))
             question_index = None
             # Center-align the button
             st.markdown('<div style="text-align: center;"><button>Upload Student Marks to Database</button></div>', unsafe_allow_html=True)
+
 
         # Display processed images, extracted diagrams, and key points for the selected question
         if question_index is not None:
