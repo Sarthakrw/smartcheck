@@ -1,11 +1,8 @@
-cv2
+opencv-python
 ultralytics
 pdf2image
 google.generativeai
-PIL
-dotenv
-os
+Pillow
 numpy
 streamlit
 pandas
-random
