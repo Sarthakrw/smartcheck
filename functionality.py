@@ -140,7 +140,7 @@ generation_config = {
   "top_k": 20,
 }
 
-gemini_vision = genai.GenerativeModel("gemini-pro-vision", generation_config=generation_config)
+gemini_vision = genai.GenerativeModel("gemini-1.5-flash", generation_config=generation_config)
 
 def generate_key_points(image):
     prompt = "You are acting as an intermediary between the student’s answer and the evaluator grading the students answer. You have been provided with an image of a student's answer sheet. Your objective is to thoroughly detect the handwritten text that the student has written and Extract the key points written by the student and output them word for word, DO NOT write your own output. If the image contains no relevant text output nothing."
